@@ -7,6 +7,7 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0.66"
+commons = { version = "0.1.0", path = "../commons" }
 itertools = "0.10.5"
 tokio = { version = "1.22", features = [
     "macros",

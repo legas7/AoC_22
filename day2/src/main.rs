@@ -1,4 +1,5 @@
 use anyhow::{bail, Context};
+use commons::NEWLINE;
 use tokio::{fs::File, io::AsyncReadExt};
 
 enum Shape {
@@ -34,7 +35,7 @@ async fn main() -> anyhow::Result<()> {
     let raw_str = String::from_utf8(buffer)?;
 
     let result_points = raw_str
-        .split('\n')
+        .split(NEWLINE)
         .map(get_result_points)
         .sum::<anyhow::Result<i32>>();
 

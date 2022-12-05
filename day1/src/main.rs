@@ -1,12 +1,7 @@
+use commons::NEWLINE;
 use std::collections::BinaryHeap;
 use tokio::fs::File;
 use tokio::io::AsyncReadExt;
-
-#[cfg(windows)]
-const NEWLINE: &str = "\r\n";
-
-#[cfg(linux)]
-const NEWLINE: &str = "\n";
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
