@@ -21,7 +21,7 @@ impl Shape {
             'A' | 'X' => Ok(Shape::Rock),
             'B' | 'Y' => Ok(Shape::Paper),
             'C' | 'Z' => Ok(Shape::Scissors),
-            _ =>  bail!("Can't parse '{}' into Shape", c)
+            _ => bail!("Can't parse '{}' into Shape", c),
         }
     }
 }
@@ -57,7 +57,6 @@ fn get_result_points(line: &str) -> anyhow::Result<i32> {
         (Shape::Scissors, Shape::Rock) => Ok(6),
         (Shape::Scissors, Shape::Paper) => Ok(0),
         (Shape::Scissors, Shape::Scissors) => Ok(3),
-
     };
     let figure_pts = mine.get_figure_score();
 

@@ -2,6 +2,12 @@ use std::collections::BinaryHeap;
 use tokio::fs::File;
 use tokio::io::AsyncReadExt;
 
+#[cfg(windows)]
+const NEWLINE: &str = "\r\n";
+
+#[cfg(linux)]
+const NEWLINE: &str = "\n";
+
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     let mut file = File::open("inputs/day1_input.txt").await?;
@@ -10,10 +16,10 @@ async fn main() -> anyhow::Result<()> {
     let raw_str = String::from_utf8(buffer)?;
 
     let mut sum_per_elf = raw_str
-        .split("\n\n")
+        .split(&format!("{NEWLINE}{NEWLINE}"))
         .into_iter()
         .map(|elf| {
-            elf.split('\n')
+            elf.split(NEWLINE)
                 .map(|item| item.parse::<i32>().expect("Could not parse item"))
                 .sum::<i32>()
         })
