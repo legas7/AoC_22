@@ -8,20 +8,51 @@ enum Shape {
     Scissors,
 }
 
+enum ExpectedGameResult {
+    Loss,
+    Draw,
+    Win,
+}
+
+impl ExpectedGameResult {
+    fn parse(c: char) -> anyhow::Result<ExpectedGameResult> {
+        match c {
+            'X' => Ok(ExpectedGameResult::Loss),
+            'Y' => Ok(ExpectedGameResult::Draw),
+            'Z' => Ok(ExpectedGameResult::Win),
+            _ => bail!("Can't parse '{}' into ExpectedGameResult", c),
+        }
+    }
+
+    fn get_expected_shape(self, opponents_shape: &Shape) -> Shape {
+        match (self, opponents_shape) {
+            (ExpectedGameResult::Loss, Shape::Rock) => Shape::Scissors,
+            (ExpectedGameResult::Loss, Shape::Paper) => Shape::Rock,
+            (ExpectedGameResult::Loss, Shape::Scissors) => Shape::Paper,
+            (ExpectedGameResult::Draw, Shape::Rock) => Shape::Rock,
+            (ExpectedGameResult::Draw, Shape::Paper) => Shape::Paper,
+            (ExpectedGameResult::Draw, Shape::Scissors) => Shape::Scissors,
+            (ExpectedGameResult::Win, Shape::Rock) => Shape::Paper,
+            (ExpectedGameResult::Win, Shape::Paper) => Shape::Scissors,
+            (ExpectedGameResult::Win, Shape::Scissors) => Shape::Rock,
+        }
+    }
+}
+
 impl Shape {
-    fn get_figure_score(self) -> anyhow::Result<i32> {
+    fn get_figure_score(self) -> i32 {
         match self {
-            Shape::Rock => Ok(1),
-            Shape::Paper => Ok(2),
-            Shape::Scissors => Ok(3),
+            Shape::Rock => 1,
+            Shape::Paper => 2,
+            Shape::Scissors => 3,
         }
     }
 
     fn parse(c: char) -> anyhow::Result<Shape> {
         match c {
-            'A' | 'X' => Ok(Shape::Rock),
-            'B' | 'Y' => Ok(Shape::Paper),
-            'C' | 'Z' => Ok(Shape::Scissors),
+            'A' => Ok(Shape::Rock),
+            'B' => Ok(Shape::Paper),
+            'C' => Ok(Shape::Scissors),
             _ => bail!("Can't parse '{}' into Shape", c),
         }
     }
@@ -45,21 +76,23 @@ async fn main() -> anyhow::Result<()> {
 }
 
 fn get_result_points(line: &str) -> anyhow::Result<i32> {
-    let opponents = Shape::parse(line.chars().nth(0).with_context(|| "empty input")?)?;
-    let mine = Shape::parse(line.chars().nth(2).with_context(|| "empty input")?)?;
+    let opponents_shape = Shape::parse(line.chars().nth(0).with_context(|| "empty input")?)?;
+    let expected_result =
+        ExpectedGameResult::parse(line.chars().nth(2).with_context(|| "empty input")?)?;
+    let my_expected_shape = expected_result.get_expected_shape(&opponents_shape);
 
-    let result_pts: anyhow::Result<i32> = match (&opponents, &mine) {
-        (Shape::Rock, Shape::Rock) => Ok(3),
-        (Shape::Rock, Shape::Paper) => Ok(6),
-        (Shape::Rock, Shape::Scissors) => Ok(0),
-        (Shape::Paper, Shape::Rock) => Ok(0),
-        (Shape::Paper, Shape::Paper) => Ok(3),
-        (Shape::Paper, Shape::Scissors) => Ok(6),
-        (Shape::Scissors, Shape::Rock) => Ok(6),
-        (Shape::Scissors, Shape::Paper) => Ok(0),
-        (Shape::Scissors, Shape::Scissors) => Ok(3),
+    let result_pts = match (&opponents_shape, &my_expected_shape) {
+        (Shape::Rock, Shape::Rock) => 3,
+        (Shape::Rock, Shape::Paper) => 6,
+        (Shape::Rock, Shape::Scissors) => 0,
+        (Shape::Paper, Shape::Rock) => 0,
+        (Shape::Paper, Shape::Paper) => 3,
+        (Shape::Paper, Shape::Scissors) => 6,
+        (Shape::Scissors, Shape::Rock) => 6,
+        (Shape::Scissors, Shape::Paper) => 0,
+        (Shape::Scissors, Shape::Scissors) => 3,
     };
-    let figure_pts = mine.get_figure_score();
+    let figure_pts = my_expected_shape.get_figure_score();
 
-    Ok(result_pts? + figure_pts?)
+    Ok(result_pts + figure_pts)
 }
