@@ -11,12 +11,17 @@ fn main() -> anyhow::Result<()> {
 
     let sum_of_priorities = raw_str
         .split(NEWLINE)
-        .map(|line| line.split_at(line.len() / 2))
-        .map(|(compartment1, compartment2)| {
-            let c1: BTreeSet<_> = compartment1.chars().collect();
-            let c2: BTreeSet<_> = compartment2.chars().collect();
+        .tuples::<(_, _, _)>()
+        .map(|(pack1, pack2, pack3)| {
+            let bts1: BTreeSet<_> = pack1.chars().collect();
+            let bts2: BTreeSet<_> = pack2.chars().collect();
+            let bts3: BTreeSet<_> = pack3.chars().collect();
 
-            c1.intersection(&c2).copied().collect::<Vec<char>>()
+            let bts1_bts2 = bts1.intersection(&bts2).copied().collect::<BTreeSet<_>>();
+            bts1_bts2
+                .intersection(&bts3)
+                .copied()
+                .collect::<BTreeSet<_>>()
         })
         .map(|intersection| {
             intersection
