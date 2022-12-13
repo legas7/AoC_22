@@ -14,10 +14,13 @@ fn main() -> anyhow::Result<()> {
                 section_to_hashset(pair_sections.1),
             )
         })
-        .map(|(e1, e2)| e1.is_superset(&e2) || e2.is_superset(&e1))
-        .fold(0, |acc, contains| if contains { acc + 1 } else { acc });
+        .map(|(e1, e2)| e1.is_disjoint(&e2))
+        .fold(
+            0,
+            |acc, is_disjoint| if is_disjoint { acc } else { acc + 1 },
+        );
 
-    println!("Fully overlapping pairs : {}", overlaps_sum);
+    println!("Partially overlapping pair sections : {}", overlaps_sum);
 
     Ok(())
 }
