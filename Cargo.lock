@@ -51,7 +51,15 @@ dependencies = [
  "anyhow",
  "commons",
  "itertools",
- "tokio",
+]
+
+[[package]]
+name = "day4"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "commons",
+ "itertools",
 ]
 
 [[package]]
