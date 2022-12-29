@@ -1,4 +1,3 @@
-use anyhow::Context;
 use itertools::Itertools;
 use std::{fs::File, io::Read};
 
@@ -59,14 +58,15 @@ fn execute(
     moves: Vec<(u32, u32, u32)>,
 ) -> anyhow::Result<Vec<Vec<char>>> {
     for (count, from, to) in moves.into_iter() {
+        let source_stack_idx = (from - 1) as usize;
+        let dest_stack_idx = (to - 1) as usize;
+
+        let mut crane = Vec::new();
         for _ in 0u32..count {
-            let source_stack_idx = (from - 1) as usize;
-            let dest_stack_idx = (to - 1) as usize;
-            let moved_crate = state[source_stack_idx]
-                .pop()
-                .context("no crates on stack")?;
-            state[dest_stack_idx].push(moved_crate);
+            crane.push(state[source_stack_idx].pop());
         }
+
+        state[dest_stack_idx].append(&mut crane.into_iter().rev().flatten().collect_vec());
     }
 
     Ok(state)
