@@ -1,6 +1,6 @@
 use std::{collections::BTreeSet, fs::File, io::Read};
 
-use commons::NEWLINE;
+use aoc22::NEWLINE;
 use itertools::Itertools;
 
 fn main() -> anyhow::Result<()> {

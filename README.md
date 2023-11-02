@@ -1,3 +1,3 @@
 # AoC_22
 ## Running
-From main dir: `cargo run -p day<n>`
+From main dir: `cargo run --bin day<n>`

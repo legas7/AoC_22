@@ -1,7 +1,8 @@
-use commons::NEWLINE;
 use std::collections::BinaryHeap;
 use tokio::fs::File;
 use tokio::io::AsyncReadExt;
+
+use aoc22::NEWLINE;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {

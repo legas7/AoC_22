@@ -1,3 +1,16 @@
-[workspace]
+[package]
+name = "aoc22"
+version = "0.1.0"
+edition = "2021"
 
-members = ["day1","day2","day3","day4","day5","day6","commons"]
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.66"
+itertools = "0.10.5"
+tokio = { version = "1.22", features = [
+    "macros",
+    "rt-multi-thread",
+    "fs",
+    "io-util",
+] }

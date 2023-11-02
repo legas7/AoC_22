@@ -1,5 +1,5 @@
 use anyhow::{bail, Context};
-use commons::NEWLINE;
+use aoc22::NEWLINE;
 use tokio::{fs::File, io::AsyncReadExt};
 
 enum Shape {
